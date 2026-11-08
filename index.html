@@ -6,7 +6,7 @@
   <title>Eco Bauru — Bauru mais consciente começa com você</title>
   <meta name="description" content="Eco Bauru: guia de reciclagem, mapa de pontos de coleta e descarte correto de eletrônicos, pilhas e óleo em Bauru/SP.">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=5">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='9' fill='%230d140d'/><path d='M9 21c0-7 5-11 14-12-1 9-5 14-12 14' fill='none' stroke='%23b9f36b' stroke-width='2.4' stroke-linecap='round'/></svg>">
 </head>
 <body>
@@ -209,29 +209,41 @@
       <p class="sub reveal">Uma série curta, feita para o celular, explicando o caminho de cada resíduo depois que sai da sua casa.</p>
     </div>
     <div class="videos">
-      <article class="vid reveal" style="--h:110">
-        <div class="vid-thumb"><span class="play" aria-hidden="true">▶</span><span class="dur">0:58</span></div>
+      <article class="vid reveal">
+        <button class="vid-thumb" type="button" data-src="videos/ep1.mp4" aria-label="Assistir Ep. 01: Para onde vai a garrafa PET?">
+          <img src="videos/ep1.jpg" alt="" loading="lazy"><span class="play" aria-hidden="true">▶</span><span class="dur">0:24</span>
+        </button>
         <p class="vid-ep">Ep. 01</p>
         <h3>Para onde vai a garrafa PET?</h3>
       </article>
-      <article class="vid reveal" style="--h:28">
-        <div class="vid-thumb"><span class="play" aria-hidden="true">▶</span><span class="dur">1:04</span></div>
+      <article class="vid reveal">
+        <button class="vid-thumb" type="button" data-src="videos/ep2.mp4" aria-label="Assistir Ep. 02: Uma gota de óleo, um rio inteiro">
+          <img src="videos/ep2.jpg" alt="" loading="lazy"><span class="play" aria-hidden="true">▶</span><span class="dur">0:22</span>
+        </button>
         <p class="vid-ep">Ep. 02</p>
         <h3>Uma gota de óleo, um rio inteiro</h3>
       </article>
-      <article class="vid reveal" style="--h:200">
-        <div class="vid-thumb"><span class="play" aria-hidden="true">▶</span><span class="dur">0:47</span></div>
+      <article class="vid reveal">
+        <button class="vid-thumb" type="button" data-src="videos/ep3.mp4" aria-label="Assistir Ep. 03: A segunda vida do seu celular">
+          <img src="videos/ep3.jpg" alt="" loading="lazy"><span class="play" aria-hidden="true">▶</span><span class="dur">0:22</span>
+        </button>
         <p class="vid-ep">Ep. 03</p>
         <h3>A segunda vida do seu celular</h3>
       </article>
-      <article class="vid reveal" style="--h:70">
-        <div class="vid-thumb"><span class="play" aria-hidden="true">▶</span><span class="dur">1:12</span></div>
+      <article class="vid reveal">
+        <button class="vid-thumb" type="button" data-src="videos/ep4.mp4" aria-label="Assistir Ep. 04: Um dia com uma cooperativa de catadores">
+          <img src="videos/ep4.jpg" alt="" loading="lazy"><span class="play" aria-hidden="true">▶</span><span class="dur">0:26</span>
+        </button>
         <p class="vid-ep">Ep. 04</p>
         <h3>Um dia com uma cooperativa de catadores</h3>
       </article>
     </div>
-    <p class="soon reveal">Episódios em produção — os vídeos entram aqui assim que forem publicados.</p>
   </section>
+
+  <div class="player" id="player" role="dialog" aria-modal="true" aria-label="Vídeo" hidden>
+    <button class="player-close" type="button" aria-label="Fechar vídeo">✕</button>
+    <video id="playerVideo" controls playsinline preload="none"></video>
+  </div>
 
   <!-- CAMPANHAS -->
   <section class="section" id="campanhas">
@@ -289,6 +301,6 @@
   </footer>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="script.js"></script>
+  <script src="script.js?v=5"></script>
 </body>
 </html>

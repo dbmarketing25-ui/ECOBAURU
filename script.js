@@ -338,6 +338,22 @@ updateProgress();
   requestAnimationFrame(frame);
 })();
 
+/* ---------- Player de vídeos ---------- */
+const player = document.getElementById('player');
+const pv = document.getElementById('playerVideo');
+let lastThumb = null;
+function closePlayer() { pv.pause(); pv.removeAttribute('src'); pv.load(); player.hidden = true; document.body.style.overflow = ''; lastThumb?.focus(); }
+document.querySelectorAll('.vid-thumb').forEach(b => b.addEventListener('click', () => {
+  lastThumb = b;
+  pv.src = b.dataset.src; pv.poster = b.querySelector('img').src;
+  player.hidden = false; document.body.style.overflow = 'hidden';
+  pv.play().catch(() => {});
+  player.querySelector('.player-close').focus();
+}));
+player.querySelector('.player-close').addEventListener('click', closePlayer);
+player.addEventListener('click', e => { if (e.target === player) closePlayer(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && !player.hidden) closePlayer(); });
+
 /* ---------- Reveal on scroll ---------- */
 const io = new IntersectionObserver(entries => entries.forEach(e => {
   if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }

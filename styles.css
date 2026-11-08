@@ -263,8 +263,16 @@ b { font-weight: 400; color: var(--text); }
 
 /* ===== Videos ===== */
 .videos { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+.vid-thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .6s ease, filter .4s; filter: brightness(.82); }
+.vid-thumb:hover img { transform: scale(1.04); filter: brightness(1); }
+.vid-thumb { width: 100%; padding: 0; cursor: pointer; }
+.player { position: fixed; inset: 0; z-index: 200; display: grid; place-items: center; padding: 24px; background: rgba(4,6,4,.86); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); animation: pop .3s ease; }
+.player[hidden] { display: none; }
+.player video { height: min(86vh, 900px); max-width: 100%; aspect-ratio: 9 / 16; border-radius: 24px; background: #000; box-shadow: 0 30px 80px rgba(0,0,0,.6), 0 0 0 1px var(--line-2); }
+.player-close { position: absolute; top: 20px; right: 20px; width: 48px; height: 48px; border-radius: 50%; background: rgba(255,255,255,.1); border: 1px solid var(--line-2); font-size: 18px; }
+.player-close:hover { background: rgba(255,255,255,.2); }
 .vid-thumb {
-  position: relative; aspect-ratio: 9 / 13; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--line);
+  position: relative; aspect-ratio: 9 / 16; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--line);
   background:
     radial-gradient(80% 60% at 30% 20%, hsl(var(--h) 60% 45% / .55), transparent 60%),
     radial-gradient(70% 60% at 80% 90%, hsl(calc(var(--h) + 40) 50% 30% / .7), transparent 60%),
