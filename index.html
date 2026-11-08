@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Eco Bauru — Bauru mais consciente começa com você</title>
+  <meta name="description" content="Eco Bauru: guia de reciclagem, mapa de pontos de coleta e descarte correto de eletrônicos, pilhas e óleo em Bauru/SP.">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='9' fill='%230d140d'/><path d='M9 21c0-7 5-11 14-12-1 9-5 14-12 14' fill='none' stroke='%23b9f36b' stroke-width='2.4' stroke-linecap='round'/></svg>">
+</head>
+<body>
+
+  <!-- NAV -->
+  <header class="nav">
+    <a href="#topo" class="brand" aria-label="Eco Bauru — início">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M7 23c0-8.5 6-13.5 17-14.5-1.2 10.5-6.2 16-14.5 16" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><path d="M7 25c3.5-4.5 7-7.5 11.5-10" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>
+      <span>Eco Bauru</span>
+    </a>
+    <nav class="nav-pill" aria-label="Principal">
+      <a href="#guia">Guia</a>
+      <a href="#mapa">Mapa</a>
+      <a href="#especial">Descarte especial</a>
+      <a href="#videos">Vídeos</a>
+      <a href="#campanhas">Campanhas</a>
+    </nav>
+    <a href="#mapa" class="btn btn-light nav-cta">Achar um ponto</a>
+    <button class="nav-toggle" aria-label="Abrir menu" aria-expanded="false"><span></span><span></span></button>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero" id="topo">
+    <div class="hero-bg" aria-hidden="true">
+      <div class="glow g1"></div><div class="glow g2"></div>
+      <svg class="leaf leaf-l" viewBox="0 0 400 600"><path d="M380 20C120 60 20 260 40 580 260 520 380 320 380 20Z"/><path class="vein" d="M370 40C260 200 140 380 50 570"/></svg>
+      <svg class="leaf leaf-r" viewBox="0 0 400 600"><path d="M20 20C280 60 380 260 360 580 140 520 20 320 20 20Z"/><path class="vein" d="M30 40C140 200 260 380 350 570"/></svg>
+    </div>
+    <div class="hero-inner">
+      <p class="eyebrow reveal">Educação ambiental · Bauru/SP</p>
+      <h1 class="reveal">Bauru mais consciente<br><em>começa com você.</em></h1>
+      <p class="lede reveal">Descubra o que vai em cada lixeira, onde descartar pilhas, eletrônicos e óleo, e encontre o ponto de coleta mais perto da sua casa — tudo de um jeito simples e visual.</p>
+      <div class="hero-ctas reveal">
+        <a href="#guia" class="btn btn-light">Começar pelo guia <span class="arr">→</span></a>
+        <a href="#mapa" class="btn btn-ghost">Ver mapa de coleta</a>
+      </div>
+
+      <form class="ask reveal" id="ask" autocomplete="off">
+        <label for="askInput" class="ask-label">Onde eu descarto…</label>
+        <div class="ask-field">
+          <input id="askInput" type="text" placeholder="pilha, isopor, caixa de pizza, celular…" aria-describedby="askOut">
+          <button type="submit" aria-label="Buscar">↵</button>
+        </div>
+        <div class="ask-chips" aria-label="Sugestões">
+          <button type="button" data-q="pilha">pilha</button>
+          <button type="button" data-q="óleo de cozinha">óleo de cozinha</button>
+          <button type="button" data-q="caixa de pizza">caixa de pizza</button>
+          <button type="button" data-q="celular">celular</button>
+          <button type="button" data-q="espelho">espelho</button>
+        </div>
+        <div class="ask-out" id="askOut" aria-live="polite"></div>
+      </form>
+    </div>
+
+    <div class="globe-wrap" aria-hidden="true">
+      <canvas id="globe"></canvas>
+      <div class="orbit"></div>
+    </div>
+  </section>
+
+  <!-- CORES -->
+  <section class="strip" aria-label="Cores da coleta seletiva">
+    <div class="strip-track">
+      <span><i style="--c:#3b82f6"></i>Papel</span>
+      <span><i style="--c:#ef4444"></i>Plástico</span>
+      <span><i style="--c:#22c55e"></i>Vidro</span>
+      <span><i style="--c:#facc15"></i>Metal</span>
+      <span><i style="--c:#92400e"></i>Orgânico</span>
+      <span><i style="--c:#f97316"></i>Perigosos</span>
+      <span><i style="--c:#9ca3af"></i>Não reciclável</span>
+      <span aria-hidden="true"><i style="--c:#3b82f6"></i>Papel</span>
+      <span aria-hidden="true"><i style="--c:#ef4444"></i>Plástico</span>
+      <span aria-hidden="true"><i style="--c:#22c55e"></i>Vidro</span>
+      <span aria-hidden="true"><i style="--c:#facc15"></i>Metal</span>
+      <span aria-hidden="true"><i style="--c:#92400e"></i>Orgânico</span>
+      <span aria-hidden="true"><i style="--c:#f97316"></i>Perigosos</span>
+      <span aria-hidden="true"><i style="--c:#9ca3af"></i>Não reciclável</span>
+    </div>
+  </section>
+
+  <!-- GUIA -->
+  <section class="section" id="guia">
+    <div class="section-head">
+      <p class="eyebrow reveal">01 — Guia de separação</p>
+      <h2 class="reveal">O que pode <em>e o que não pode.</em></h2>
+      <p class="sub reveal">Escolha um material para ver o que vai na lixeira certa — e os erros mais comuns que atrapalham a reciclagem.</p>
+    </div>
+
+    <div class="guide reveal">
+      <div class="guide-tabs" role="tablist" aria-label="Materiais"></div>
+      <div class="guide-panel" id="guidePanel" role="tabpanel"></div>
+    </div>
+
+    <div class="tips">
+      <article class="tip reveal">
+        <span class="tip-n">1</span>
+        <h3>Limpe por cima</h3>
+        <p>Um enxágue rápido basta. Embalagem com resto de comida contamina o lote todo.</p>
+      </article>
+      <article class="tip reveal">
+        <span class="tip-n">2</span>
+        <h3>Seque e amasse</h3>
+        <p>Garrafas e caixas amassadas ocupam menos espaço no caminhão da coleta.</p>
+      </article>
+      <article class="tip reveal">
+        <span class="tip-n">3</span>
+        <h3>Dois sacos já resolvem</h3>
+        <p>Sem cinco lixeiras em casa? Separe só em <b>recicláveis secos</b> e <b>orgânicos/rejeitos</b>.</p>
+      </article>
+      <article class="tip reveal">
+        <span class="tip-n">4</span>
+        <h3>Na dúvida, pergunte</h3>
+        <p>Use a busca “Onde eu descarto…” no topo da página antes de jogar fora.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- MAPA -->
+  <section class="section section-map" id="mapa">
+    <div class="section-head">
+      <p class="eyebrow reveal">02 — Mapa de coleta</p>
+      <h2 class="reveal">Encontre o ponto <em>mais perto de você.</em></h2>
+      <p class="sub reveal">Filtre pelo tipo de resíduo e toque em um ponto para ver o que ele recebe e quando funciona.</p>
+    </div>
+
+    <div class="map-shell reveal">
+      <aside class="map-side">
+        <div class="filters" id="filters" role="group" aria-label="Filtrar por tipo"></div>
+        <ul class="plist" id="plist"></ul>
+        <p class="map-note">⚠ Pontos <b>fictícios</b>, criados para demonstração do projeto. Confirme endereços e horários com a Prefeitura de Bauru antes de sair de casa.</p>
+      </aside>
+      <div class="map-wrap">
+        <div id="map" aria-label="Mapa interativo de Bauru com pontos de coleta"></div>
+        <button class="locate" id="locate" type="button">◎ Usar minha localização</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ESPECIAL -->
+  <section class="section" id="especial">
+    <div class="section-head">
+      <p class="eyebrow reveal">03 — Descarte especial</p>
+      <h2 class="reveal">Esses <em>nunca</em> vão<br>no lixo comum.</h2>
+      <p class="sub reveal">Eletrônicos, pilhas e óleo têm componentes que contaminam solo e água. O caminho certo é simples — veja o passo a passo.</p>
+    </div>
+
+    <div class="special">
+      <article class="sp reveal" style="--accent:#8fd3ff">
+        <div class="sp-top">
+          <svg viewBox="0 0 48 48" aria-hidden="true"><rect x="14" y="5" width="20" height="38" rx="4"/><path d="M21 37h6"/></svg>
+          <span class="sp-tag">Eletrônicos</span>
+        </div>
+        <h3>Celulares, carregadores, computadores e eletrodomésticos</h3>
+        <ol>
+          <li>Apague seus dados e retire o chip e o cartão de memória.</li>
+          <li>Separe cabos e acessórios num saquinho junto do aparelho.</li>
+          <li>Leve a um ponto de <b>eletrônicos</b> no mapa ou a lojas com logística reversa.</li>
+        </ol>
+        <p class="sp-why"><b>Por quê?</b> Placas têm chumbo, mercúrio e cádmio — e também metais valiosos que podem ser recuperados.</p>
+        <a href="#mapa" class="sp-link" data-filter="eletronicos">Ver pontos de eletrônicos →</a>
+      </article>
+
+      <article class="sp reveal" style="--accent:#ffb36b">
+        <div class="sp-top">
+          <svg viewBox="0 0 48 48" aria-hidden="true"><rect x="15" y="10" width="18" height="33" rx="3"/><path d="M20 5h8v5h-8z"/><path d="M24 20v6m-3-3h6M21 35h6"/></svg>
+          <span class="sp-tag">Pilhas e baterias</span>
+        </div>
+        <h3>Pilhas, baterias de celular, notebook e lâmpadas</h3>
+        <ol>
+          <li>Guarde num pote plástico seco e fechado, longe do calor.</li>
+          <li>Proteja os polos de baterias de lítio com fita adesiva.</li>
+          <li>Leve a um coletor de <b>pilhas</b> — muitos mercados e farmácias têm um.</li>
+        </ol>
+        <p class="sp-why"><b>Por quê?</b> Metais pesados vazam com o tempo e chegam ao lençol freático.</p>
+        <a href="#mapa" class="sp-link" data-filter="pilhas">Ver pontos de pilhas →</a>
+      </article>
+
+      <article class="sp reveal" style="--accent:#f3d36b">
+        <div class="sp-top">
+          <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M19 5h10v6l4 6v24a3 3 0 0 1-3 3H18a3 3 0 0 1-3-3V17l4-6z"/><path d="M15 25c4 2 14 2 18 0"/></svg>
+          <span class="sp-tag">Óleo de cozinha</span>
+        </div>
+        <h3>Óleo usado de fritura</h3>
+        <ol>
+          <li>Espere esfriar e coe para tirar restos de comida.</li>
+          <li>Guarde numa garrafa PET bem fechada.</li>
+          <li>Entregue num ponto de <b>óleo</b> — vira sabão, biodiesel e renda.</li>
+        </ol>
+        <p class="sp-why"><b>Por quê?</b> Jogado na pia, entope a rede de esgoto e polui rios e córregos.</p>
+        <a href="#mapa" class="sp-link" data-filter="oleo">Ver pontos de óleo →</a>
+      </article>
+    </div>
+  </section>
+
+  <!-- VIDEOS -->
+  <section class="section" id="videos">
+    <div class="section-head">
+      <p class="eyebrow reveal">04 — Vídeos educativos</p>
+      <h2 class="reveal">Aprenda em <em>um minuto.</em></h2>
+      <p class="sub reveal">Uma série curta, feita para o celular, explicando o caminho de cada resíduo depois que sai da sua casa.</p>
+    </div>
+    <div class="videos">
+      <article class="vid reveal" style="--h:110">
+        <div class="vid-thumb"><span class="play" aria-hidden="true">▶</span><span class="dur">0:58</span></div>
+        <p class="vid-ep">Ep. 01</p>
+        <h3>Para onde vai a garrafa PET?</h3>
+      </article>
+      <article class="vid reveal" style="--h:28">
+        <div class="vid-thumb"><span class="play" aria-hidden="true">▶</span><span class="dur">1:04</span></div>
+        <p class="vid-ep">Ep. 02</p>
+        <h3>Uma gota de óleo, um rio inteiro</h3>
+      </article>
+      <article class="vid reveal" style="--h:200">
+        <div class="vid-thumb"><span class="play" aria-hidden="true">▶</span><span class="dur">0:47</span></div>
+        <p class="vid-ep">Ep. 03</p>
+        <h3>A segunda vida do seu celular</h3>
+      </article>
+      <article class="vid reveal" style="--h:70">
+        <div class="vid-thumb"><span class="play" aria-hidden="true">▶</span><span class="dur">1:12</span></div>
+        <p class="vid-ep">Ep. 04</p>
+        <h3>Um dia com uma cooperativa de catadores</h3>
+      </article>
+    </div>
+    <p class="soon reveal">Episódios em produção — os vídeos entram aqui assim que forem publicados.</p>
+  </section>
+
+  <!-- CAMPANHAS -->
+  <section class="section" id="campanhas">
+    <div class="section-head">
+      <p class="eyebrow reveal">05 — Campanhas</p>
+      <h2 class="reveal">Pequenos hábitos, <em>cidade inteira.</em></h2>
+    </div>
+
+    <div class="camp">
+      <article class="camp-hero reveal">
+        <p class="camp-kicker">Desafio</p>
+        <h3>7 dias separando certo</h3>
+        <p>Um hábito por dia. Marque o que você já fez — seu progresso fica salvo neste aparelho.</p>
+        <ul class="challenge" id="challenge"></ul>
+        <div class="progress"><div class="bar" id="bar"></div></div>
+        <p class="progress-txt" id="progressTxt"></p>
+      </article>
+
+      <div class="camp-side">
+        <article class="camp-card reveal">
+          <p class="camp-kicker">Mutirão</p>
+          <h3>Óleo vira sabão</h3>
+          <p>Junte o óleo usado do prédio ou da rua num galão e leve ao ponto de óleo mais próximo.</p>
+        </article>
+        <article class="camp-card reveal">
+          <p class="camp-kicker">Escolas</p>
+          <h3>Pilha não é lixo</h3>
+          <p>Turmas montam coletores de pilhas com material reaproveitado e espalham pela escola.</p>
+        </article>
+        <article class="camp-card reveal">
+          <p class="camp-kicker">Bairros</p>
+          <h3>Minha rua, meu ecoponto</h3>
+          <p>Vizinhos combinam um dia por mês para levar recicláveis juntos ao ecoponto do bairro.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="closing">
+    <div class="closing-inner reveal">
+      <p class="eyebrow">Eco Bauru</p>
+      <h2>Conectando pessoas a um<br><em>futuro mais sustentável.</em></h2>
+      <a href="#guia" class="btn btn-light">Quero separar certo <span class="arr">→</span></a>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <div class="brand">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M7 23c0-8.5 6-13.5 17-14.5-1.2 10.5-6.2 16-14.5 16" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><path d="M7 25c3.5-4.5 7-7.5 11.5-10" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>
+      <span>Eco Bauru</span>
+    </div>
+    <p>Aplicativo de educação ambiental · Tecnologia, sustentabilidade e participação comunitária.</p>
+    <p class="foot-small">Projeto acadêmico. Pontos de coleta do mapa são fictícios. Mapa © OpenStreetMap, © CARTO.</p>
+  </footer>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
